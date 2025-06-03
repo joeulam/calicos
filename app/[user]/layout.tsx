@@ -1,19 +1,28 @@
-import { cookies } from "next/headers"
+import { cookies } from "next/headers";
 
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/menu-bar"
-import { createClient } from "@/util/client"
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar, MenuItems } from "@/components/menu-bar";
+import { Calendar, Home, Inbox, LogOut, Search, Settings } from "lucide-react";
+import { createClient } from "@/utils/supabase/server";
 
-export default async function Layout({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies()
-  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true"
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 
-  const getUser = async() => {
-    const supabase = createClient();
-    const {data} = await supabase.auth.getUser()
-    const id = data.user?.id
-    console.log(data)
+  const getUser = async () => {
+    const supabase = await createClient();
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if(!user){
+      return []
+    }
+    const id = user?.id;
 
     const items = [
       {
@@ -41,18 +50,23 @@ export default async function Layout({ children }: { children: React.ReactNode }
         url: "#",
         icon: Settings,
       },
-    ]
-    return items
-  }
+      {
+        title: "Logout",
+        url: "/logout",
+        icon: LogOut,
+      },
+    ];
+    return items as MenuItems[];
+  };
 
-  const items = await getUser()
+  const items = await getUser();
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
-      <AppSidebar items={items}/>
+      <AppSidebar items={items} />
       <main>
         <SidebarTrigger />
         {children}
       </main>
     </SidebarProvider>
-  )
+  );
 }

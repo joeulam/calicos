@@ -1,31 +1,18 @@
-'use client'
-import { createClient } from "@/util/client";
+import { createClient } from "@/utils/supabase/server";
 import "../globals.css";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
-
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const router = useRouter()
-
-  const getUser = async() => {
-    const supabase = createClient();
-    const {data} = await supabase.auth.getUser()
-    if(data != null){
-      console.log(data)
-      router.push(`/${data.user?.id}/dashboard`)
-    }
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (user) {
+    redirect(`/${user.id}/dashboard`);
   }
-
-  
-  getUser()
-  return (
-      <body
-      >
-        {children}
-      </body>
-  );
+  return <div>{children}</div>;
 }
