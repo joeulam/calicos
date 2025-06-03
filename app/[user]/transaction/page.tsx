@@ -1,13 +1,13 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { columns } from "./transaction-tables/columns";
 import { DataTable } from "./transaction-tables/data-table";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import dayjs from "dayjs"
+import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import AddTransactionModal from "@/components/new-transaction-popup";
+
 
 export default function Transaction() {
   dayjs.extend(customParseFormat);
@@ -29,7 +29,6 @@ export default function Transaction() {
   const currentMonthData = allData.filter(
     (d) => dayjs(d.date).month() === currentMonth
   );
-
   const { state } = useSidebar();
   return (
     <div
@@ -40,7 +39,7 @@ export default function Transaction() {
       <div className="flex items-center flex-col">
         <div className="flex justify-between w-11/12">
           <h1 className="text-2xl font-bold bottom-0">Transaction</h1>
-          <Button className="">Add new transaction</Button>
+          <AddTransactionModal/>
         </div>
         <div className="w-11/12 mt-2">
           <Input />
@@ -59,7 +58,6 @@ export default function Transaction() {
             </TabsContent>
           </Tabs>
         </div>
-        <AddTransactionModal/>
       </div>
     </div>
   );
