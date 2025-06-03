@@ -10,9 +10,9 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { signupNewUser } from "@/supabase/authFunctions";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signupNewUser } from "@/supabase/signup-function";
 
 export function SignupForm({
   className,

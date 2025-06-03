@@ -1,0 +1,34 @@
+"use client"
+
+import { ColumnDef } from "@tanstack/react-table"
+import dayjs from "dayjs"
+
+// This type is used to define the shape of our data.
+// You can use a Zod schema here if you want.
+export type Catagory = {
+  name: string,
+ // fill in later
+}
+export type Transaction = {
+  date: Date
+  vendor: string
+  total: number
+  category: Catagory
+  id: string
+}
+
+export const columns: ColumnDef<Transaction>[] = [
+  {
+    accessorKey: "date",
+    header: "Date",
+    cell: ({ row }) => dayjs(row.original.date).format("MM/DD/YY")
+  },
+  {
+    accessorKey: "vendor",
+    header: "Store",
+  },
+  {
+    accessorKey: "total",
+    header: "Cost",
+  },
+]

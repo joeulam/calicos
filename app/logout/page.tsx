@@ -1,7 +1,7 @@
 "use client"
 
 import { Label } from "@/components/ui/label"
-import { logout } from "@/supabase/authFunctions"
+import { logout } from "@/supabase/logout-function"
 import { useRouter } from "next/navigation"
 export default function Logout(){
   const router = useRouter()

@@ -23,34 +23,3 @@ export async function signupNewUser(
     router.push(`/${data.user?.id}/dashboard`);
   }
 }
-
-export async function signin(
-  email: string,
-  password: string,
-  router: AppRouterInstance
-) {
-  const supabase = createClient();
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  if (error) {
-    console.error("Login error:", error.message);
-  } else {
-    console.log("User Login:", data.user);
-    router.push(`/${data.user?.id}/dashboard`);
-  }
-}
-
-export async function logout(router: AppRouterInstance){
-  const supabase = createClient();
-  const { error } = await supabase.auth.signOut()
-  if(error){
-    console.error("Logout error:", error.message);
-  } else{
-    console.log("Logged out")
-    router.push("/")
-  }
-
-}

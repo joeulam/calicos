@@ -1,27 +1,27 @@
-
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { LucideProps } from "lucide-react"
-import { ForwardRefExoticComponent, RefAttributes } from "react"
-
+} from "@/components/ui/sidebar";
+import { LogOut, LucideProps } from "lucide-react";
+import { ForwardRefExoticComponent, RefAttributes } from "react";
 
 // Menu items.
 export interface MenuItems {
-  title: string,
-  url: string,
-  icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>
+  title: string;
+  url: string;
+  icon: ForwardRefExoticComponent<
+    Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
+  >;
 }
 
-export function AppSidebar({items} : {items: MenuItems[]}) {
+export function AppSidebar({ items }: { items: MenuItems[] }) {
   return (
     <Sidebar>
       <SidebarContent>
@@ -43,6 +43,14 @@ export function AppSidebar({items} : {items: MenuItems[]}) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenuButton asChild>
+          <a href={"/logout"}>
+            <LogOut />
+            <span>{"Logout"}</span>
+          </a>
+        </SidebarMenuButton>
+      </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

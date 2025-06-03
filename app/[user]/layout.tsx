@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar, MenuItems } from "@/components/menu-bar";
-import { Calendar, Home, Inbox, LogOut, Search, Settings } from "lucide-react";
+import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function Layout({
@@ -36,24 +36,19 @@ export default async function Layout({
         icon: Inbox,
       },
       {
-        title: "Calendar",
-        url: "#",
+        title: "Budgets",
+        url: `/${id}/budget`,
         icon: Calendar,
       },
       {
-        title: "Search",
-        url: "#",
+        title: "Reports",
+        url: `/${id}/report`,
         icon: Search,
       },
       {
         title: "Settings",
-        url: "#",
+        url: `/${id}/settings`,
         icon: Settings,
-      },
-      {
-        title: "Logout",
-        url: "/logout",
-        icon: LogOut,
       },
     ];
     return items as MenuItems[];
