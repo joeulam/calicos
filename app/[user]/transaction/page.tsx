@@ -8,7 +8,6 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import AddTransactionModal from "@/components/new-transaction-popup";
 
-
 export default function Transaction() {
   dayjs.extend(customParseFormat);
   const allData = [
@@ -32,16 +31,16 @@ export default function Transaction() {
   const { state } = useSidebar();
   return (
     <div
-    className={`transition-all duration-300 py-10 px-6 md:px-10 ${
-      state === "expanded"
-        ? "w-[80vw] sm:w-[100vw]"
-        : "mx-auto w-[100vw] sm:w-[100vw]"
-    }`}
+      className={`transition-all duration-300 py-10 px-6 md:px-10 ${
+        state === "expanded"
+          ? "w-[80vw] sm:w-[100vw]"
+          : "mx-auto w-[100vw] sm:w-[100vw]"
+      }`}
     >
       <div className="flex items-center flex-col">
         <div className="flex justify-between w-11/12">
           <h1 className="text-2xl font-bold bottom-0">Transaction</h1>
-          <AddTransactionModal/>
+          <AddTransactionModal />
         </div>
         <div className="w-11/12 mt-2">
           <Input />
