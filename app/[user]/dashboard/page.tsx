@@ -9,17 +9,11 @@ import { RecentTransactionsCard } from "@/components/recent-transaction-feed";
 import { TopOverspendingCard } from "@/components/overspending-table";
 
 export default function Dashboard() {
-  const { state } = useSidebar();
-
   return (
     <div
-      className={`transition-all duration-300 py-10 px-6 md:px-10 ${
-        state === "expanded"
-          ? "w-[80vw] sm:w-[100vw]"
-          : "mx-auto w-[100vw] sm:w-[100vw]"
-      }`}
+      className={`transition-all duration-300 py-10 px-6 md:px-10 w-[100vw] `}
     >
-      <div className="px-20">
+      <div className="md:px-20 px-0">
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           <p className="text-muted-foreground mt-1">

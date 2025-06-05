@@ -75,20 +75,14 @@ export default function SettingsPage() {
     toast("Account Deleted");
   };
 
-  const { state } = useSidebar();
-
   return (
     <div
-      className={`transition-all duration-300 py-10 px-6 md:px-10 ${
-        state === "expanded"
-          ? "w-[80vw] sm:w-[100vw]"
-          : "mx-auto w-[100vw] sm:w-[100vw]"
-      }`}
+      className={`transition-all duration-300 py-10 px-6 md:px-10 w-[100vw] `}
     >
       <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
       <Toaster />
 
-      <Card>
+      <Card className="mt-5">
         <CardHeader>
           <CardTitle>Profile Information</CardTitle>
           <CardDescription>Update your personal details.</CardDescription>
@@ -121,8 +115,7 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      {/* Notifications Section */}
-      <Card>
+      <Card className="mt-5">
         <CardHeader>
           <CardTitle>Notifications</CardTitle>
           <CardDescription>
@@ -141,7 +134,7 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="mt-5">
         <CardHeader>
           <CardTitle>Appearance</CardTitle>
           <CardDescription>
@@ -164,7 +157,7 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="mt-5">
         <CardHeader>
           <CardTitle>Password & Security</CardTitle>
           <CardDescription>Change your password.</CardDescription>
@@ -201,7 +194,7 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="mt-5">
         <CardHeader>
           <CardTitle>Preferences</CardTitle>
           <CardDescription>Set your application preferences.</CardDescription>
@@ -223,7 +216,7 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Card className="border-red-400">
+      <Card className="border-red-400 mt-5">
         <CardHeader>
           <CardTitle className="text-red-600">Danger Zone</CardTitle>
           <CardDescription>Irreversible actions.</CardDescription>

@@ -135,20 +135,17 @@ export default function BudgetPage() {
 
   return (
     <div
-      className={`transition-all duration-300 py-10 px-6 md:px-10 ${
-        state === "expanded"
-          ? "w-[80vw] sm:w-[100vw]"
-          : "mx-auto w-[100vw] sm:w-[100vw]"
-      }`}
+      className={`transition-all duration-300 py-10 px-6 md:px-10 w-[100vw] `}
     >
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <div>
           <h1 className="text-xl font-medium text-gray-900">Budget Overview</h1>
           <p className="text-sm text-muted-foreground">
             Summary for {monthDisplay}
           </p>
         </div>
-        <div className="flex space-x-2">
+
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 sm:items-center">
           <Button variant="outline" onClick={() => handleMonthChange(-1)}>
             Previous Month
           </Button>
