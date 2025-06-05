@@ -32,6 +32,7 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "./ui/dialog";
+import { submitTransaction, TransactionItem } from "@/supabase/submit-transaction";
 
 // Zod schema
 const formSchema = z.object({
@@ -50,11 +51,12 @@ export default function AddTransactionModal() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: TransactionItem) {
     try {
       console.log("Submitted values:", values);
       toast.success("Transaction added!");
       // You would insert to Supabase here
+      await submitTransaction(values)
       form.reset();
     } catch (error) {
       toast.error("Submission failed.");
@@ -71,7 +73,7 @@ export default function AddTransactionModal() {
       <DialogContent>
         <DialogHeader>New Transaction</DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(() => onSubmit)} className="space-y-6">
             {/* Date Field */}
             <FormField
               control={form.control}
