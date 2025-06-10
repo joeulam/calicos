@@ -58,7 +58,6 @@ const DateRangePicker = ({ selectedMonth, onMonthChange }) => {
 };
 
 export default function ReportsPage() {
-  const { state } = useSidebar();
 
   const [selectedMonth, setSelectedMonth] = useState(new Date(2024, 4, 1));
   const filteredData = useMemo(() => {

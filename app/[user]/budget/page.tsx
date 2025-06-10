@@ -1,24 +1,23 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { budgetCard as initialBudgetCardData } from "@/app/dummy/budget-mock";
+import React, { useState, useMemo, useEffect } from "react";
 import { BudgetCategoryBarChart } from "@/components/budget-bar-chart";
 import {
   Card,
-  CardDescription,
   CardHeader,
   CardTitle,
   CardContent,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useSidebar } from "@/components/ui/sidebar";
 import { DataTable } from "./budget-table/data-table";
 import { columns } from "./budget-table/columns";
 import AddNewBudget from "@/components/new-budget-popup";
+import BudgetTitle from "./budget-components/title";
+import { BudgetCards, DataCards } from "./budget-components/budget-info-cards";
+import { getBudgetSummary } from "@/app/helper-functions/get-budget-card-data";
 
 export default function BudgetPage() {
-  const { state } = useSidebar();
-  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [cardData, setCardData] = useState<DataCards[]>();
   const [allData, setAllData] = useState([
     {
       id: "cat-1",
@@ -53,6 +52,7 @@ export default function BudgetPage() {
       progress: 33,
     },
   ]);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const insights = useMemo(() => {
     if (allData.length === 0) {
@@ -106,20 +106,20 @@ export default function BudgetPage() {
     };
   }, [allData]);
 
-  const handleAddBudget = (newBudget) => {
-    console.log("Adding new budget:", newBudget);
-    setAllData((prevData) => [
-      ...prevData,
-      {
-        id: `cat-${prevData.length + 1}`,
-        category: newBudget.category,
-        budget: parseFloat(newBudget.budget),
-        spent: 0,
-        remaining: parseFloat(newBudget.budget),
-        progress: 0,
-      },
-    ]);
-  };
+  // const handleAddBudget = (newBudget) => {
+  //   console.log("Adding new budget:", newBudget);
+  //   setAllData((prevData) => [
+  //     ...prevData,
+  //     {
+  //       id: `cat-${prevData.length + 1}`,
+  //       category: newBudget.category,
+  //       budget: parseFloat(newBudget.budget),
+  //       spent: 0,
+  //       remaining: parseFloat(newBudget.budget),
+  //       progress: 0,
+  //     },
+  //   ]);
+  // };
 
   const handleMonthChange = (direction) => {
     setCurrentMonth((prevMonth) => {
@@ -134,18 +134,20 @@ export default function BudgetPage() {
     year: "numeric",
   });
 
+  useEffect(()=>{
+    async function cardData(){
+      const budgetCardData = await getBudgetSummary();
+      setCardData(budgetCardData)
+      
+    }
+    cardData()
+  }, [])
   return (
     <div
       className={`transition-all duration-300 py-10 px-6 md:px-10 w-[100vw] md:w-[80vw]`}
     >
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-        <div>
-          <h1 className="text-xl font-medium text-gray-900">Budget Overview</h1>
-          <p className="text-sm text-muted-foreground">
-            Summary for {monthDisplay}
-          </p>
-        </div>
-
+        <BudgetTitle monthDisplay={monthDisplay}/>
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 sm:items-center">
           <Button variant="outline" onClick={() => handleMonthChange(-1)}>
             Previous Month
@@ -156,34 +158,7 @@ export default function BudgetPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {initialBudgetCardData.map((item, index) => (
-          <Card
-            key={index}
-            className="h-24 rounded-md border border-muted shadow-sm hover:shadow transition relative overflow-hidden" // Added relative and overflow-hidden for progress bar
-          >
-            <CardHeader className="p-2 -mt-5">
-              <div className="flex flex-col gap-0.5">
-                <CardTitle className="text-sm text-gray-700 font-normal">
-                  {item.title}
-                </CardTitle>
-                <div className="text-lg font-semibold text-primary">
-                  ${item.amount.toFixed(2)}
-                </div>
-                <CardDescription className="text-xs text-muted-foreground leading-tight">
-                  {item.subTitle}
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-200">
-              <div
-                className="h-full bg-blue-500"
-                style={{ width: `${item.progress}%` }}
-              ></div>
-            </div>
-          </Card>
-        ))}
-      </div>
+      <BudgetCards initialBudgetCardData={cardData!}/>
 
       <div className="mt-6">
         <BudgetCategoryBarChart data={allData} />

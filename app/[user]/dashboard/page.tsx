@@ -1,6 +1,5 @@
 "use client";
 
-import { useSidebar } from "@/components/ui/sidebar";
 import "../../globals.css";
 import { BudgetGaugeChart } from "@/components/budget-gauge";
 import { DonutCategoryChart } from "@/components/donunt-catagory";
