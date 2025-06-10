@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/client";
 
-export interface TransactionItem{
+export interface BudgetItem{
   id:string,
   user_id: string,
   vendor: string,
@@ -13,12 +13,12 @@ export interface TransactionItem{
   
 }
 
-export async function submitTransaction(transactionData : TransactionItem){
+export async function createNewBudget(budgetItem : BudgetItem){
   const supabase = createClient();
   const { error } = await supabase
-  .from('transactions')
-  .insert(transactionData)
-  console.log(transactionData)
+  .from('budget')
+  .insert(budgetItem)
+  console.log(budgetItem)
   if(error){
     console.log(error)
   }

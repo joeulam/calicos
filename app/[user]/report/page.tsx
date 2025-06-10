@@ -161,7 +161,7 @@ export default function ReportsPage() {
 
   return (
     <div
-      className={`transition-all duration-300 py-10 px-6 md:px-10 w-[100vw] `}
+    className={`transition-all duration-300 py-10 px-6 md:px-10 w-[100vw] md:w-[80vw]`}
     >
       <div className="flex justify-between items-center mb-6">
         <div>

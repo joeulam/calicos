@@ -4,7 +4,6 @@ import { toast, Toaster } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,16 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { format } from "date-fns";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { Calendar as CalendarIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import React from "react";
 import {
   Dialog,
@@ -39,25 +29,19 @@ import { createClient } from "@/utils/supabase/client";
 
 const formSchema = z.object({
   id: z.string().optional(),
+  title: z.string(),
   user_id: z.string().optional(),
   created_at: z.date(),
-  date: z.date(),
-  vendor: z.string().min(1, "Vendor is required"),
-  total: z.coerce.number().min(0.01, "Amount must be greater than 0"),
-  description: z.string().optional(),
-  type: z.enum(["expense", "income"]),
+  amount: z.coerce.number().min(0.01, "Amount must be greater than 0"),
   categories: z.array(z.string()).optional(),
 });
 
-export default function AddTransactionModal() {
+export default function AddNewBudget() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       created_at: new Date(),
-      date: new Date(),
-      vendor: "",
-      description: "",
-      type: "expense",
+      title: "",
       categories: [],
     },
   });
@@ -103,23 +87,23 @@ export default function AddTransactionModal() {
       };
   
       const { error: txError } = await supabase
-        .from("transactions")
+        .from("budgets")
         .insert(transactionPayload);
   
       if (txError) {
-        toast.error("Failed to add transaction.");
-        console.error(txError);
+        toast.error("Failed to add budget.");
+        console.error("failed:" + txError.cause);
         return;
       }
   
       const categoryRows = categories.map((categoryId) => ({
-        transaction_id: transactionId,
+        budget_id: transactionId,
         category_id: categoryId,
       }));
   
       if (categoryRows.length > 0) {
         const { error: catError } = await supabase
-          .from("transaction_categories")
+          .from("budget_categories")
           .insert(categoryRows);
   
         if (catError) {
@@ -143,89 +127,19 @@ export default function AddTransactionModal() {
     <Dialog>
       <Toaster />
       <DialogTrigger>
-        <Button>Add new transaction</Button>
+        <Button>Add new Budget</Button>
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader>New Transaction</DialogHeader>
+        <DialogHeader>New Budget</DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* Date Field */}
-            <FormField
-              control={form.control}
-              name="date"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Date</FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-[240px] pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "MM/dd/yy")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="type"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Type</FormLabel>
-                  <div className="flex gap-4">
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="radio"
-                        value="expense"
-                        checked={field.value === "expense"}
-                        onChange={() => field.onChange("expense")}
-                      />
-                      <span>Expense</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="radio"
-                        value="income"
-                        checked={field.value === "income"}
-                        onChange={() => field.onChange("income")}
-                      />
-                      <span>Income</span>
-                    </label>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
-            {/* Vendor Field */}
             <FormField
               control={form.control}
-              name="vendor"
+              name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Vendor</FormLabel>
+                  <FormLabel>Budget Name</FormLabel>
                   <FormControl>
                     <Input placeholder="e.g. Starbucks" {...field} />
                   </FormControl>
@@ -237,7 +151,7 @@ export default function AddTransactionModal() {
             {/* Amount Field */}
             <FormField
               control={form.control}
-              name="total"
+              name="amount"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Amount ($)</FormLabel>
@@ -314,20 +228,6 @@ export default function AddTransactionModal() {
                     />
                   </FormControl>
                   <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Notes Field */}
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Notes</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Optional notes..." {...field} />
-                  </FormControl>
                 </FormItem>
               )}
             />

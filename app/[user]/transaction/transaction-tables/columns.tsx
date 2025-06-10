@@ -10,6 +10,7 @@ export type Catagory = {
  // fill in later
 }
 export type Transaction = {
+  type: string
   date: Date
   vendor: string
   total: number
@@ -30,6 +31,13 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "total",
     header: "Cost",
-  },
+    cell: ({ row }) => {
+      const total = row.original.total;
+      const type = row.original.type;
+      const color = type === "expense" ? "text-red-500" : "text-green-600";
+      return <span className={color}>${total.toFixed(2)}</span>;
+    },
+  }
+  
 ]
 

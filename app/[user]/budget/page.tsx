@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 import { DataTable } from "./budget-table/data-table";
 import { columns } from "./budget-table/columns";
+import AddNewBudget from "@/components/new-budget-popup";
 
 export default function BudgetPage() {
   const { state } = useSidebar();
@@ -135,7 +136,7 @@ export default function BudgetPage() {
 
   return (
     <div
-      className={`transition-all duration-300 py-10 px-6 md:px-10 w-[100vw] `}
+      className={`transition-all duration-300 py-10 px-6 md:px-10 w-[100vw] md:w-[80vw]`}
     >
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <div>
@@ -193,7 +194,7 @@ export default function BudgetPage() {
           <h2 className="text-sm font-medium text-gray-700">
             Budget vs Spending
           </h2>
-          <Button variant="default">+ Add Budget</Button>
+          <AddNewBudget/>
         </div>
         <div className="rounded-md border bg-white p-3 shadow-sm">
           {allData.length > 0 ? (

@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import AddTransactionModal from "@/components/new-transaction-popup";
+import { getTransactions } from "@/supabase/get-transaction-function";
 
 export default function Transaction() {
   dayjs.extend(customParseFormat);
@@ -14,23 +15,15 @@ export default function Transaction() {
   const [transactions, setTransactions] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
+
+  async function getTransactionData(){
+    const data = await getTransactions()
+    setTransactions(data)
+  } 
+
   useEffect(() => {
-    const fetched = [
-      {
-        id: "1",
-        total: 100,
-        date: dayjs("06-01-2025", "MM-DD-YYYY").toDate(),
-        vendor: "Mcdonalds",
-      },
-      {
-        id: "2",
-        total: 25,
-        date: dayjs("05-20-2025", "MM-DD-YYYY").toDate(),
-        vendor: "Target",
-      },
-    ];
-    setTransactions(fetched);
-  }, []);
+    getTransactionData()
+  }, [transactions]);
 
   const filteredData = transactions.filter((tx) =>
     tx.vendor.toLowerCase().includes(searchQuery.toLowerCase())

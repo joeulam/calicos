@@ -77,7 +77,7 @@ export default function SettingsPage() {
 
   return (
     <div
-      className={`transition-all duration-300 py-10 px-6 md:px-10 w-[100vw] `}
+    className={`transition-all duration-300 py-10 px-6 md:px-10 w-[100vw] md:w-[80vw]`}
     >
       <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
       <Toaster />
