@@ -4,7 +4,6 @@ export interface DataCards {
   title: string;
   amount: number;
   subTitle: string;
-  progress: number;
 }
 
 export function BudgetCards({ initialBudgetCardData }: { initialBudgetCardData: DataCards[] }) {
@@ -30,7 +29,7 @@ export function BudgetCards({ initialBudgetCardData }: { initialBudgetCardData: 
               <CardTitle className="text-sm text-gray-700 font-normal">
                 {item.title}
               </CardTitle>
-              <div className="text-lg font-semibold text-primary">
+              <div className={`text-lg font-semibold text-primary ${Number(item.amount.toFixed(2)) >= 0 ? `text-black` : `text-red-600`}`}>
                 ${item.amount.toFixed(2)}
               </div>
               <CardDescription className="text-xs text-muted-foreground leading-tight">
@@ -41,7 +40,6 @@ export function BudgetCards({ initialBudgetCardData }: { initialBudgetCardData: 
           <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-200">
             <div
               className="h-full bg-blue-500"
-              style={{ width: `${item.progress}%` }}
             ></div>
           </div>
         </Card>

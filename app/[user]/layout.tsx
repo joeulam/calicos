@@ -1,19 +1,44 @@
 import BottomNavBar from "@/components/bottom-nav";
 import { AppSidebar } from "@/components/menu-bar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { createClient } from "@/utils/supabase/server";
-import { Home, Inbox, Calendar, Search, Settings } from "lucide-react";
+import {
+  Home,
+  Inbox,
+  Calendar,
+  Search,
+  Settings,
+  LucideProps,
+} from "lucide-react";
 import { cookies } from "next/headers";
+import { ForwardRefExoticComponent, RefAttributes } from "react";
 
-export default async function Layout({ children }: { children: React.ReactNode }) {
+export type SidebarItem = {
+  title: string;
+  url: string;
+  icon: ForwardRefExoticComponent<
+    Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
+  >;
+};
+
+export type UserSidebarData = {
+  items: SidebarItem[];
+  id: string;
+};
+export default async function Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 
-  const getUser = async () => {
+  async function getUser(): Promise<UserSidebarData> {
     const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return [];
-    const id = user.id;
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const id = user!.id;
 
     const items = [
       { title: "Dashboard", url: `/${id}/dashboard`, icon: Home },
@@ -23,30 +48,20 @@ export default async function Layout({ children }: { children: React.ReactNode }
       { title: "Settings", url: `/${id}/settings`, icon: Settings },
     ];
     return { items, id };
-  };
+  }
 
   const { items, id } = await getUser();
 
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>
-  <div className="flex">
-    {/* Sidebar only on desktop */}
-    <div className="hidden md:block">
-      <AppSidebar items={items} />
-    </div>
-
-    {/* Main content */}
-    <main className="flex-1 pb-16 md:pb-0">{children}</main>
-
-    {/* Bottom Nav only on mobile */}
-    <BottomNavBar userId={id} />
-  </div>
-
-  {/* Sidebar toggle only on desktop */}
-  <div className="hidden md:block">
-    <SidebarTrigger />
-  </div>
-</SidebarProvider>
-
+    <SidebarProvider
+      defaultOpen={defaultOpen}>
+      <div className="flex">
+        <div className="hidden lg:block">
+          <AppSidebar items={items} />
+        </div>
+        <main className="flex-1 pb-16 lg:pb-0">{children}</main>
+        <BottomNavBar userId={id} />
+      </div>
+    </SidebarProvider>
   );
 }

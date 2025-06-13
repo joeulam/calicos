@@ -15,10 +15,17 @@ import AddNewBudget from "@/components/new-budget-popup";
 import BudgetTitle from "./budget-components/title";
 import { BudgetCards, DataCards } from "./budget-components/budget-info-cards";
 import { getBudgetSummary } from "@/app/helper-functions/get-budget-card-data";
-
+export interface BudgetData {
+  id: string;
+  category: string;
+  budget: number;
+  spent: number;
+  remaining: number;
+  progress: number;
+}
 export default function BudgetPage() {
   const [cardData, setCardData] = useState<DataCards[]>();
-  const [allData, setAllData] = useState([
+  const [allData, ] = useState<BudgetData[]>([
     {
       id: "cat-1",
       category: "doggy",
@@ -121,7 +128,7 @@ export default function BudgetPage() {
   //   ]);
   // };
 
-  const handleMonthChange = (direction) => {
+  const handleMonthChange = (direction:number) => {
     setCurrentMonth((prevMonth) => {
       const newMonth = new Date(prevMonth);
       newMonth.setMonth(prevMonth.getMonth() + direction);
@@ -161,7 +168,7 @@ export default function BudgetPage() {
       <BudgetCards initialBudgetCardData={cardData!}/>
 
       <div className="mt-6">
-        <BudgetCategoryBarChart data={allData} />
+        <BudgetCategoryBarChart />
       </div>
 
       <div className="mt-6">

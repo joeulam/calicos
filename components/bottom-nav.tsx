@@ -18,7 +18,7 @@ export default function BottomNavBar({ userId }: { userId: string }) {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white border-t px-4 py-2 shadow-md md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 flex justify-around bg-white border-t px-4 py-2 shadow-md lg:hidden">
       {navItems.map(({ title, href, icon: Icon }) => {
         const fullHref = `/${userId}${href}`;
         const isActive = pathname.startsWith(fullHref);

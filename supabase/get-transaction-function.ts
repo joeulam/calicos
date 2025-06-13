@@ -8,7 +8,6 @@ export async function getTransactions(){
   .select()
   if(error){
     console.log(error)
-    return error
   }
   return data
 }

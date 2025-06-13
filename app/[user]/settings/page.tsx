@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, createContext, useContext } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { useSidebar } from "@/components/ui/sidebar";
 
 import {
   AlertDialog,
@@ -39,15 +38,13 @@ export default function SettingsPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  const handleUpdateProfile = (e) => {
-    e.preventDefault();
+  const handleUpdateProfile = () => {
     console.log("Updating profile:", { userName, userEmail });
 
     toast("Profile Updated!");
   };
 
-  const handleChangePassword = (e) => {
-    e.preventDefault();
+  const handleChangePassword = () => {
     setPasswordError("");
 
     if (password !== confirmPassword) {

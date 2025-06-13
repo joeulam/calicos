@@ -36,6 +36,7 @@ import { getUser } from "@/supabase/user-function";
 import CreatableSelect from "react-select/creatable";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { OptionType } from "./new-budget-popup";
 
 const formSchema = z.object({
   id: z.string().optional(),
@@ -143,10 +144,10 @@ export default function AddTransactionModal() {
     <Dialog>
       <Toaster />
       <DialogTrigger>
-        <Button>Add new transaction</Button>
+        <Button className="w-[90vw] lg:w-15/16">Add new transaction</Button>
       </DialogTrigger>
       <DialogContent>
-        <DialogHeader>New Transaction</DialogHeader>
+        <DialogHeader className="text-xl font-bold">New Transaction</DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {/* Date Field */}
@@ -269,7 +270,7 @@ export default function AddTransactionModal() {
                           [];
 
                         for (const option of selectedOptions) {
-                          if ((option as any).__isNew__) {
+                          if ((option as OptionType).__isNew__) {
                             const { data, error } = await supabase
                               .from("categories")
                               .insert({
@@ -341,6 +342,7 @@ export default function AddTransactionModal() {
               <DialogClose asChild>
                 <Button variant="secondary">Close</Button>
               </DialogClose>
+
             </div>
           </form>
         </Form>{" "}

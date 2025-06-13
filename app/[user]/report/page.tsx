@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
-import { useSidebar } from "@/components/ui/sidebar";
 const mockBudgetData = [
   { category: "Dining Out", budget: 300, spent: 396, month: "2024-05" },
   { category: "Groceries", budget: 500, spent: 560, month: "2024-05" },
@@ -19,14 +18,19 @@ const mockBudgetData = [
   { category: "Transportation", budget: 150, spent: 100, month: "2024-05" },
   { category: "Utilities", budget: 200, spent: 180, month: "2024-05" },
   { category: "Savings", budget: 400, spent: 400, month: "2024-05" },
-
   { category: "Dining Out", budget: 300, spent: 250, month: "2024-04" },
   { category: "Groceries", budget: 500, spent: 480, month: "2024-04" },
   { category: "Rent", budget: 1200, spent: 1200, month: "2024-04" },
   { category: "Utilities", budget: 200, spent: 220, month: "2024-04" },
 ];
 
-const DateRangePicker = ({ selectedMonth, onMonthChange }) => {
+const DateRangePicker = ({
+  selectedMonth,
+  onMonthChange,
+}: {
+  selectedMonth: Date;
+  onMonthChange: (newMonth: Date) => void;
+}) => {
   const currentMonthName = selectedMonth.toLocaleString("en-US", {
     month: "long",
     year: "numeric",
@@ -58,7 +62,6 @@ const DateRangePicker = ({ selectedMonth, onMonthChange }) => {
 };
 
 export default function ReportsPage() {
-
   const [selectedMonth, setSelectedMonth] = useState(new Date(2024, 4, 1));
   const filteredData = useMemo(() => {
     const yearMonth = selectedMonth.toISOString().slice(0, 7);
@@ -105,8 +108,14 @@ export default function ReportsPage() {
       overspendingAlerts: overspendingAlerts,
     };
   }, [filteredData]);
+  type Trend = {
+    spent: number;
+    budget: number;
+  };
+
   const monthlySpendingTrendData = useMemo(() => {
-    const trends = {};
+    const trends: Record<string, Trend> = {};
+
     mockBudgetData.forEach((item) => {
       if (!trends[item.month]) {
         trends[item.month] = { spent: 0, budget: 0 };
@@ -114,9 +123,10 @@ export default function ReportsPage() {
       trends[item.month].spent += item.spent;
       trends[item.month].budget += item.budget;
     });
+
     return Object.keys(trends)
       .sort()
-      .reduce((obj, key) => {
+      .reduce<Record<string, Trend>>((obj, key) => {
         obj[key] = trends[key];
         return obj;
       }, {});
@@ -160,7 +170,7 @@ export default function ReportsPage() {
 
   return (
     <div
-    className={`transition-all duration-300 py-10 px-6 md:px-10 w-[100vw] md:w-[80vw]`}
+      className={`transition-all duration-300 py-10 px-6 md:px-10 w-[100vw] md:w-[80vw]`}
     >
       <div className="flex justify-between items-center mb-6">
         <div>
@@ -175,7 +185,6 @@ export default function ReportsPage() {
             onMonthChange={setSelectedMonth}
           />
         </div>
-        
       </div>
 
       <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

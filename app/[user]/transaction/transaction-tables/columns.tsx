@@ -9,7 +9,7 @@ export type Catagory = {
   name: string,
  // fill in later
 }
-export type Transaction = {
+export interface TransactionRow {
   type: string
   date: Date
   vendor: string
@@ -18,7 +18,7 @@ export type Transaction = {
   id: string
 }
 
-export const columns: ColumnDef<Transaction>[] = [
+export const columns: ColumnDef<TransactionRow>[] = [
   {
     accessorKey: "date",
     header: "Date",

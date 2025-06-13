@@ -161,7 +161,7 @@ export default function LandingPage() {
           </h2>
           <p className="text-lg opacity-90">
             Join thousands of users who are making smarter financial decisions
-            with Calico. It's free to start!
+            with Calico. It&apos;s free to start!
           </p>
           <Button
             size="lg"

@@ -36,6 +36,12 @@ const formSchema = z.object({
   categories: z.array(z.string()).optional(),
 });
 
+export type OptionType = {
+  label: string;
+  value: string;
+  __isNew__?: boolean; 
+};
+
 export default function AddNewBudget() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -179,11 +185,12 @@ export default function AddNewBudget() {
                         const user = await getUser();
                         if (!user.user) return;
 
-                        const processed: { label: string; value: string }[] =
+                        const processed: { label: string; value: string
+                        }[] =
                           [];
 
                         for (const option of selectedOptions) {
-                          if ((option as any).__isNew__) {
+                          if ((option as OptionType).__isNew__) {
                             const { data, error } = await supabase
                               .from("categories")
                               .insert({

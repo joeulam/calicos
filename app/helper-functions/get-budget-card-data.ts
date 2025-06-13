@@ -39,6 +39,7 @@ export async function getBudgetSummary() : Promise<DataCards[]> {
       title: "Total Expenses",
       amount: expenses,
       subTitle: "Last 30 days",
+
     },
     {
       title: "Remaining Balance",
