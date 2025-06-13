@@ -99,19 +99,30 @@ export default function BudgetPage() {
 
   useEffect(()=>{
     async function cardData(){
-      const budgetCardData = await getBudgetSummary();
+      const budgetCardData = await getBudgetSummary(currentMonth);
       setCardData(budgetCardData)
+
+      async function refresh() {
+        const [summary, table] = await Promise.all([
+          getBudgetSummary(currentMonth),
+          getBudgetTableData(currentMonth),
+        ]);
+        setCardData(summary);
+        setAllData(table);
+      }
+    
+      refresh();
       
     }
 
     async function fetchAllData() {
-      const result = await getBudgetTableData();
+      const result = await getBudgetTableData(currentMonth);
       setAllData(result);
       console.log(result)
     }  
     fetchAllData();
     cardData()
-  }, [])
+  }, [currentMonth])
   return (
     <div className="transition-all duration-300 py-10 px-6 md:px-10 w-full md:w-[100vw] lg:w-[85vw] lg:mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
@@ -138,8 +149,8 @@ export default function BudgetPage() {
             Budget vs Spending
           </h2>
           <AddNewBudget onBudgetAdded={() => {
-  getBudgetTableData().then(setAllData);
-  getBudgetSummary().then(setCardData);
+  getBudgetTableData(currentMonth).then(setAllData);
+  getBudgetSummary(currentMonth).then(setCardData);
 }} />
         </div>
         <div className="rounded-md border bg-white p-3 shadow-sm">

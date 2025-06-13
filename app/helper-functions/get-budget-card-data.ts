@@ -1,8 +1,7 @@
 import { createClient } from "@/utils/supabase/client";
 import { getUser } from "@/supabase/user-function";
 import { DataCards } from "../[user]/budget/budget-components/budget-info-cards";
-
-export async function getBudgetSummary() : Promise<DataCards[]> {
+export async function getBudgetSummary(currentMonth: Date): Promise<DataCards[]> {
   const supabase = createClient();
   const user = await getUser();
 
@@ -10,10 +9,14 @@ export async function getBudgetSummary() : Promise<DataCards[]> {
     throw new Error("Not authenticated");
   }
 
+  const fromDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+  const toDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+
   const { data, error } = await supabase
     .from("transactions")
     .select("total, type, created_at")
-    .gte("created_at", new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString())
+    .gte("created_at", fromDate.toISOString())
+    .lte("created_at", toDate.toISOString())
     .eq("user_id", user.user.id);
 
   if (error || !data) {
@@ -33,18 +36,17 @@ export async function getBudgetSummary() : Promise<DataCards[]> {
     {
       title: "Total Income",
       amount: income,
-      subTitle: "Last 30 days",
+      subTitle: "This month",
     },
     {
       title: "Total Expenses",
       amount: expenses,
-      subTitle: "Last 30 days",
-
+      subTitle: "This month",
     },
     {
       title: "Remaining Balance",
       amount: income - expenses,
-      subTitle: "Last 30 days",
+      subTitle: "This month",
     },
   ];
 }

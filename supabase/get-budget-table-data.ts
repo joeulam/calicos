@@ -1,17 +1,28 @@
 import { createClient } from "@/utils/supabase/client";
 
-export async function getBudgetTableData() {
+export async function getBudgetTableData(currentMonth: Date) {
   const supabase = createClient();
-
+  const firstDay = new Date(
+    currentMonth.getFullYear(),
+    currentMonth.getMonth(),
+    1
+  );
+  const lastDay = new Date(
+    currentMonth.getFullYear(),
+    currentMonth.getMonth() + 1,
+    0
+  );
   // Step 1: Fetch all budgets with linked categories
   const { data: budgetCategories, error: bcError } = await supabase
     .from("budget_categories")
-    .select(`
+    .select(
+      `
       budget_id,
       category_id,
       budgets(id, title, amount),
       categories(id, name, emoji)
-    `)
+    `
+    )
     .returns<
       {
         budget_id: string;
@@ -55,15 +66,17 @@ export async function getBudgetTableData() {
     }
   }
 
-  // Step 3: Fetch all expenses with categories
+  // Step 3: Fetch all expenses with categories for the current month
   const { data: transactionCategories, error: txError } = await supabase
     .from("transaction_categories")
-    .select("category_id, transaction_id, transactions(total, type)")
+    .select("category_id, transaction_id, transactions(total, type, date)")
+    .gte("transactions.date", firstDay.toISOString())
+    .lte("transactions.date", lastDay.toISOString())
     .returns<
       {
         category_id: string;
         transaction_id: string;
-        transactions: { total: number; type: string };
+        transactions: { total: number; type: string; date: string };
       }[]
     >();
 
@@ -88,29 +101,31 @@ export async function getBudgetTableData() {
   }
 
   // Step 5: Format final table
-  const result = Object.entries(budgetMeta).map(([budgetId, { title, amount }]) => {
-    const spent = budgetSpent[budgetId] ?? 0;
-    const remaining = Math.max(amount - spent, 0);
-    const progress = amount > 0 ? Math.round((spent / amount) * 100) : 0;
+  const result = Object.entries(budgetMeta).map(
+    ([budgetId, { title, amount }]) => {
+      const spent = budgetSpent[budgetId] ?? 0;
+      const remaining = Math.max(amount - spent, 0);
+      const progress = amount > 0 ? Math.round((spent / amount) * 100) : 0;
 
-    const categoryLabels = Array.from(budgetToCategories[budgetId] ?? [])
-      .map((catId) =>
-        categoryMap[catId]
-          ? `${categoryMap[catId].name} ${categoryMap[catId].emoji}`.trim()
-          : "Uncategorized"
-      )
-      .join(", ");
+      const categoryLabels = Array.from(budgetToCategories[budgetId] ?? [])
+        .map((catId) =>
+          categoryMap[catId]
+            ? `${categoryMap[catId].name} ${categoryMap[catId].emoji}`.trim()
+            : "Uncategorized"
+        )
+        .join(", ");
 
-    return {
-      id: budgetId,
-      title,
-      category: categoryLabels,
-      budget: amount,
-      spent,
-      remaining,
-      progress,
-    };
-  });
+      return {
+        id: budgetId,
+        title,
+        category: categoryLabels,
+        budget: amount,
+        spent,
+        remaining,
+        progress,
+      };
+    }
+  );
 
   return result;
 }
