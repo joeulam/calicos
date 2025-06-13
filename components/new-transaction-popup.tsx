@@ -50,8 +50,11 @@ const formSchema = z.object({
   categories: z.array(z.string()).optional(),
 });
 
-export default function AddTransactionModal() {
-  const form = useForm<z.infer<typeof formSchema>>({
+export default function AddTransactionModal({
+  onTransactionAdded,
+}: {
+  onTransactionAdded?: () => void;
+}) {  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       created_at: new Date(),
@@ -129,7 +132,7 @@ export default function AddTransactionModal() {
           return;
         }
       }
-  
+      if (onTransactionAdded) onTransactionAdded();
       toast.success("Transaction added!");
       form.reset();
     } catch (err) {

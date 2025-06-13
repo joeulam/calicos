@@ -42,8 +42,11 @@ export type OptionType = {
   __isNew__?: boolean; 
 };
 
-export default function AddNewBudget() {
-  const form = useForm<z.infer<typeof formSchema>>({
+export default function AddNewBudget({
+  onBudgetAdded,
+}: {
+  onBudgetAdded: () => void;
+}) {  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       created_at: new Date(),
@@ -118,7 +121,7 @@ export default function AddNewBudget() {
           return;
         }
       }
-  
+      onBudgetAdded();
       toast.success("Transaction added!");
       form.reset();
     } catch (err) {

@@ -10,7 +10,7 @@ export type Catagory = {
  // fill in later
 }
 export type BudgetTableProp = {
-  category: string,
+  title: string,
   budget: number,
   spent: number,
   remaining: number,
@@ -19,8 +19,8 @@ export type BudgetTableProp = {
 
 export const columns: ColumnDef<BudgetTableProp>[] = [
   {
-    accessorKey: "category",
-    header: "Category",
+    accessorKey: "title",
+    header: "Name",
   },
   {
     accessorKey: "budget",

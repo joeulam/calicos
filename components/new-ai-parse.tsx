@@ -12,7 +12,11 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export default function UploadReceiptModal() {
+export default function UploadReceiptModal({
+  onTransactionAdded,
+}: {
+  onTransactionAdded?: () => void;
+}) {
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -34,11 +38,10 @@ export default function UploadReceiptModal() {
         toast.error("Failed to parse receipt");
         return;
       }
-
+      if (onTransactionAdded) {onTransactionAdded(); }
       toast.success("Receipt parsed successfully!");
       console.log("Parsed Data:", result);
 
-      // Optionally: Open a prefilled transaction modal here
 
     } catch (err) {
       toast.error("Error uploading receipt");

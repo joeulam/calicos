@@ -15,6 +15,7 @@ import AddNewBudget from "@/components/new-budget-popup";
 import BudgetTitle from "./budget-components/title";
 import { BudgetCards, DataCards } from "./budget-components/budget-info-cards";
 import { getBudgetSummary } from "@/app/helper-functions/get-budget-card-data";
+import { getBudgetTableData } from "@/supabase/get-budget-table-data";
 export interface BudgetData {
   id: string;
   category: string;
@@ -22,43 +23,13 @@ export interface BudgetData {
   spent: number;
   remaining: number;
   progress: number;
+  title: string;
 }
 export default function BudgetPage() {
   const [cardData, setCardData] = useState<DataCards[]>();
-  const [allData, ] = useState<BudgetData[]>([
-    {
-      id: "cat-1",
-      category: "doggy",
-      budget: 1200,
-      spent: 600,
-      remaining: 600,
-      progress: 50,
-    },
-    {
-      id: "cat-2",
-      category: "rent",
-      budget: 900,
-      spent: 600,
-      remaining: 300,
-      progress: 66,
-    },
-    {
-      id: "cat-3",
-      category: "groceries",
-      budget: 500,
-      spent: 450,
-      remaining: 50,
-      progress: 90,
-    },
-    {
-      id: "cat-4",
-      category: "eating out",
-      budget: 300,
-      spent: 100,
-      remaining: 200,
-      progress: 33,
-    },
-  ]);
+
+  const [allData, setAllData] = useState<BudgetData[]>([]);
+
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const insights = useMemo(() => {
@@ -113,21 +84,6 @@ export default function BudgetPage() {
     };
   }, [allData]);
 
-  // const handleAddBudget = (newBudget) => {
-  //   console.log("Adding new budget:", newBudget);
-  //   setAllData((prevData) => [
-  //     ...prevData,
-  //     {
-  //       id: `cat-${prevData.length + 1}`,
-  //       category: newBudget.category,
-  //       budget: parseFloat(newBudget.budget),
-  //       spent: 0,
-  //       remaining: parseFloat(newBudget.budget),
-  //       progress: 0,
-  //     },
-  //   ]);
-  // };
-
   const handleMonthChange = (direction:number) => {
     setCurrentMonth((prevMonth) => {
       const newMonth = new Date(prevMonth);
@@ -147,6 +103,13 @@ export default function BudgetPage() {
       setCardData(budgetCardData)
       
     }
+
+    async function fetchAllData() {
+      const result = await getBudgetTableData();
+      setAllData(result);
+      console.log(result)
+    }  
+    fetchAllData();
     cardData()
   }, [])
   return (
@@ -174,7 +137,10 @@ export default function BudgetPage() {
           <h2 className="text-sm font-medium text-gray-700">
             Budget vs Spending
           </h2>
-          <AddNewBudget/>
+          <AddNewBudget onBudgetAdded={() => {
+  getBudgetTableData().then(setAllData);
+  getBudgetSummary().then(setCardData);
+}} />
         </div>
         <div className="rounded-md border bg-white p-3 shadow-sm">
           {allData.length > 0 ? (
