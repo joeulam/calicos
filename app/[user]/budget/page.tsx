@@ -150,9 +150,7 @@ export default function BudgetPage() {
     cardData()
   }, [])
   return (
-    <div
-      className={`transition-all duration-300 py-10 px-6 md:px-10 w-[100vw] md:w-[80vw]`}
-    >
+    <div className="transition-all duration-300 py-10 px-6 md:px-10 w-full md:w-[100vw] lg:w-[85vw] lg:mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <BudgetTitle monthDisplay={monthDisplay}/>
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 sm:items-center">

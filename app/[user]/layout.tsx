@@ -53,13 +53,14 @@ export default async function Layout({
   const { items, id } = await getUser();
 
   return (
+    
     <SidebarProvider
       defaultOpen={defaultOpen}>
       <div className="flex">
         <div className="hidden lg:block">
           <AppSidebar items={items} />
         </div>
-        <main className="flex-1 pb-16 lg:pb-0">{children}</main>
+        <main className="flex-1 overflow-x-hidden pb-16 lg:pb-0">{children}</main>
         <BottomNavBar userId={id} />
       </div>
     </SidebarProvider>
