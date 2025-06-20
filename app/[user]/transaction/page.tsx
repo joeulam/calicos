@@ -19,7 +19,7 @@ export default function TransactionPage() {
 
   const fetchTransactions = useCallback(async () => {
     const data = await getTransactions();
-    if (data) setTransactions(data);
+    if (data) {setTransactions(data)};
   }, []);
 
   useEffect(() => {

@@ -10,7 +10,6 @@ import {
   Settings,
   LucideProps,
 } from "lucide-react";
-import { cookies } from "next/headers";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
 
 export type SidebarItem = {
@@ -30,8 +29,6 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = await cookies();
-  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
 
   async function getUser(): Promise<UserSidebarData> {
     const supabase = await createClient();
@@ -55,7 +52,7 @@ export default async function Layout({
   return (
     
     <SidebarProvider
-      defaultOpen={defaultOpen}>
+      defaultOpen={true}>
       <div className="flex">
         <div className="hidden lg:block">
           <AppSidebar items={items} />
