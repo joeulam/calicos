@@ -9,10 +9,11 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { submitTransaction } from "@/supabase/submit-transaction";
 import { getUser } from "@/supabase/user-function";
+import { createClient } from "@/utils/supabase/client";
 
 export default function UploadReceiptModal({
   onTransactionAdded,
@@ -29,12 +30,18 @@ export default function UploadReceiptModal({
   }>(null);
 
   const handleSubmit = async () => {
-    const user = await getUser();
-
     if (!parsedResult) return;
-    const userId = user!.user!.id;
+
+    const user = await getUser();
+    const userId = user?.user?.id;
+    if (!userId) {
+      toast.error("User not found");
+      return;
+    }
+
+    const transactionId = crypto.randomUUID();
     const transactionData = {
-      id: crypto.randomUUID(),
+      id: transactionId,
       user_id: userId,
       vendor: parsedResult.title,
       description: parsedResult.title,
@@ -46,7 +53,23 @@ export default function UploadReceiptModal({
 
     try {
       await submitTransaction(transactionData);
-      toast.success("Transaction saved to Supabase!");
+      const supabase = createClient();
+      const { error: linkError } = await supabase
+        .from("transaction_categories")
+        .insert([
+          {
+            transaction_id: transactionId,
+            category_id: parsedResult.category,
+          },
+        ]);
+
+      if (linkError) {
+        console.error(linkError);
+        toast.error("Transaction created, but failed to link category.");
+        return;
+      }
+
+      toast.success("Transaction + category saved!");
       setParsedResult(null);
       setFile(null);
       if (onTransactionAdded) onTransactionAdded();
@@ -85,6 +108,19 @@ export default function UploadReceiptModal({
       setIsUploading(false);
     }
   };
+
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>(
+    []
+  );
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const supabase = createClient();
+      const { data } = await supabase.from("categories").select("id, name");
+      if (data) setCategories(data);
+    };
+    fetchCategories();
+  }, []);
 
   return (
     <Dialog>
@@ -127,8 +163,15 @@ export default function UploadReceiptModal({
             </div>
             <div>
               <label className="text-sm text-gray-500">Category</label>
-              <Input value={parsedResult.category} readOnly />
+              <Input
+                value={
+                  categories.find((cat) => cat.id === parsedResult.category)
+                    ?.name || parsedResult.category
+                }
+                readOnly
+              />
             </div>
+
             <div className="pt-2">
               <DialogClose asChild>
                 <Button onClick={handleSubmit} className="w-full">

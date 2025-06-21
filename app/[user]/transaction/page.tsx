@@ -32,7 +32,7 @@ export default function TransactionPage() {
 
   const currentMonth = dayjs().month();
   const currentMonthTransactions = filteredTransactions.filter(
-    (t) => dayjs(t.date).month() === currentMonth
+    (t) => dayjs(t.date).month() === currentMonth && dayjs(t.date).year() == dayjs().year()
   );
 
   return (
