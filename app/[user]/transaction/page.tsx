@@ -2,7 +2,7 @@
 
 import { columns, TransactionRow } from "./transaction-tables/columns";
 import { DataTable } from "./transaction-tables/data-table";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -26,14 +26,20 @@ export default function TransactionPage() {
     fetchTransactions();
   }, [fetchTransactions]);
 
-  const filteredTransactions = transactions.filter((t) =>
-    t.vendor.toLowerCase().includes(searchText.toLowerCase())
-  );
+  const filteredTransactions = useMemo(() => {
+    return transactions.filter((t) =>
+      t.vendor.toLowerCase().includes(searchText.toLowerCase())
+    );
+  }, [transactions, searchText]);
+  
 
-  const currentMonth = dayjs().month();
-  const currentMonthTransactions = filteredTransactions.filter(
-    (t) => dayjs(t.date).month() === currentMonth && dayjs(t.date).year() == dayjs().year()
-  );
+  const currentMonthTransactions = useMemo(() => {
+    const now = dayjs();
+    return filteredTransactions.filter(
+      (t) => dayjs(t.date).month() === now.month() && dayjs(t.date).year() === now.year()
+    );
+  }, [filteredTransactions]);
+  
 
   return (
     <div className="transition-all duration-300 py-10 px-6 md:px-10 w-full md:w-[100vw] lg:w-[85vw] lg:mx-auto">

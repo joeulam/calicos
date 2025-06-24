@@ -12,7 +12,6 @@ export async function getBudgetTableData(currentMonth: Date) {
     currentMonth.getMonth() + 1,
     0
   );
-  // Step 1: Fetch all budgets with linked categories
   const { data: budgetCategories, error: bcError } = await supabase
     .from("budget_categories")
     .select(
@@ -37,7 +36,6 @@ export async function getBudgetTableData(currentMonth: Date) {
     return [];
   }
 
-  // Step 2: Organize budget and category metadata
   const budgetMeta: Record<string, { title: string; amount: number }> = {};
   const categoryMap: Record<string, { name: string; emoji: string }> = {};
   const budgetToCategories: Record<string, Set<string>> = {};
@@ -66,7 +64,6 @@ export async function getBudgetTableData(currentMonth: Date) {
     }
   }
 
-  // Step 3: Fetch all expenses with categories for the current month
   const { data: transactionCategories, error: txError } = await supabase
     .from("transaction_categories")
     .select("category_id, transaction_id, transactions(total, type, date)")
@@ -85,7 +82,6 @@ export async function getBudgetTableData(currentMonth: Date) {
     return [];
   }
 
-  // Step 4: Aggregate spending per budget
   const budgetSpent: Record<string, number> = {};
 
   for (const tx of transactionCategories) {

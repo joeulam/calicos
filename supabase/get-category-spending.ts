@@ -3,7 +3,6 @@ import { createClient } from "@/utils/supabase/client";
 export async function getTopSpendingCategories() {
   const supabase = createClient();
 
-  // Step 1: Fetch all expense transactions joined with category data
   const { data, error } = await supabase
     .from("transaction_categories")
     .select(`
@@ -24,7 +23,6 @@ export async function getTopSpendingCategories() {
     return [];
   }
 
-  // Step 2: Sum expenses by category
   const categoryTotals: Record<string, { label: string; amount: number }> = {};
 
   for (const row of data) {
@@ -43,7 +41,6 @@ export async function getTopSpendingCategories() {
     categoryTotals[catId].amount += total;
   }
 
-  // Step 3: Return top 10
   return Object.values(categoryTotals)
     .sort((a, b) => b.amount - a.amount)
     .slice(0, 10);

@@ -18,23 +18,45 @@ import {
   CardContent,
 } from "@/components/ui/card";
 
-const sampleLineData = [
-  { date: "May 1", amount: 120 },
-  { date: "May 2", amount: 150 },
-  { date: "May 3", amount: 80 },
-  { date: "May 4", amount: 210 },
-  { date: "May 5", amount: 130 },
-];
+import { useMemo } from "react";
+import { BudgetItem } from "@/supabase/create-new-budget-function";
 
 export function SpendingLineChart({
-  data = sampleLineData,
+  transactions,
   title = "Spending Over Time",
   description = "Track your daily spending pattern",
 }: {
-  data?: { date: string; amount: number }[];
+  transactions: BudgetItem[];
   title?: string;
   description?: string;
 }) {
+  const chartData = useMemo(() => {
+    const dailyTotals: Record<string, number> = {};
+
+    for (const tx of transactions) {
+      if (tx.type !== "expense") continue;
+
+      const date = new Date(tx.date).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+
+      dailyTotals[date] = (dailyTotals[date] || 0) + tx.total;
+    }
+
+    const sortedDates = Object.keys(dailyTotals).sort(
+      (a, b) => new Date(a).getTime() - new Date(b).getTime()
+    );
+
+    let cumulative = 0;
+    const cumulativeData = sortedDates.map((date) => {
+      cumulative += dailyTotals[date];
+      return { date, amount: cumulative };
+    });
+
+    return cumulativeData;
+  }, [transactions]);
+
   return (
     <Card className="w-full rounded-md border border-muted shadow-sm">
       <CardHeader className="pb-2">
@@ -47,7 +69,10 @@ export function SpendingLineChart({
       </CardHeader>
       <CardContent className="h-[220px] px-4 pb-4">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 10, right: 10, bottom: 0, left: 0 }}>
+          <LineChart
+            data={chartData}
+            margin={{ top: 10, right: 10, bottom: 0, left: 0 }}
+          >
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis
               dataKey="date"

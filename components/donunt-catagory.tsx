@@ -8,22 +8,31 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import { BudgetItem } from "@/supabase/create-new-budget-function";
+import { useMemo } from "react";
 
-const COLORS = ["#6366f1", "#f97316", "#10b981", "#eab308", "#ec4899"];
-
-const sampleData = [
-  { name: "Rent", value: 1200 },
-  { name: "Groceries", value: 450 },
-  { name: "Transport", value: 200 },
-  { name: "Health", value: 120 },
-  { name: "Entertainment", value: 100 },
-];
+const COLORS = ["#6366f1", "#f97316", "#10b981", "#eab308", "#ec4899", "#f43f5e"];
 
 export function DonutCategoryChart({
-  data = sampleData,
+  transactions,
+  categoryMap,
 }: {
-  data?: { name: string; value: number }[];
+  transactions: BudgetItem[];
+  categoryMap: Record<string, string>;
 }) {
+  const categoryData = useMemo(() => {
+    const grouped: Record<string, number> = {};
+
+    for (const tx of transactions) {
+      if (tx.type !== "expense") continue;
+
+      const name = categoryMap[tx.category_id ?? ""] || "Uncategorized";
+      grouped[name] = (grouped[name] || 0) + tx.total;
+    }
+
+    return Object.entries(grouped).map(([name, value]) => ({ name, value }));
+  }, [transactions, categoryMap]);
+
   return (
     <Card className="rounded-md border border-muted shadow-sm w-full max-w-sm">
       <CardHeader className="pb-2">
@@ -39,7 +48,7 @@ export function DonutCategoryChart({
         <ResponsiveContainer width={240} height={240}>
           <PieChart>
             <Pie
-              data={data}
+              data={categoryData}
               cx="50%"
               cy="50%"
               innerRadius={60}
@@ -47,7 +56,7 @@ export function DonutCategoryChart({
               paddingAngle={3}
               dataKey="value"
             >
-              {data.map((entry, index) => (
+              {categoryData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
@@ -56,7 +65,7 @@ export function DonutCategoryChart({
         </ResponsiveContainer>
 
         <div className="grid grid-cols-2 gap-x-6 gap-y-1 mt-4 text-xs text-muted-foreground">
-          {data.map((item, index) => (
+          {categoryData.map((item, index) => (
             <div key={index} className="flex items-center gap-2">
               <div
                 className="h-2 w-2 rounded-full"

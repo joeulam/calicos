@@ -12,7 +12,6 @@ import {
 import { LogOut, LucideProps } from "lucide-react";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
 
-// Menu items.
 export interface MenuItems {
   title: string;
   url: string;

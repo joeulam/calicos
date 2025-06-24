@@ -8,14 +8,43 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Flame } from "lucide-react";
+import { useMemo } from "react";
+import { BudgetItem } from "@/supabase/create-new-budget-function";
 
-const overspending = [
-  { category: "Dining Out", percent: 32 },
-  { category: "Groceries", percent: 12 },
-  { category: "Subscriptions", percent: 8 },
-];
+export function TopOverspendingCard({
+  transactions,
+  categoryMap,
+  categoryBudgets,
+}: {
+  transactions: BudgetItem[];
+  categoryMap: Record<string, string>;
+  categoryBudgets: Record<string, number>;
+}) {
+  const overspending = useMemo(() => {
+    const totals: Record<string, number> = {};
 
-export function TopOverspendingCard() {
+    for (const tx of transactions) {
+      if (tx.type !== "expense") continue;
+      const id = tx.category_id ?? "uncategorized";
+      totals[id] = (totals[id] || 0) + tx.total;
+    }
+
+    const overspent: { category: string; percent: number }[] = [];
+
+    for (const id in totals) {
+      const spent = totals[id];
+      const limit = categoryBudgets[id] ?? Infinity;
+
+      if (spent > limit && limit > 0) {
+        const name = categoryMap[id] || "Uncategorized";
+        const percent = Math.round(((spent - limit) / limit) * 100);
+        overspent.push({ category: name, percent });
+      }
+    }
+
+    return overspent.sort((a, b) => b.percent - a.percent).slice(0, 5);
+  }, [transactions, categoryMap, categoryBudgets]);
+
   return (
     <Card className="rounded-md border border-muted shadow-sm">
       <CardHeader className="pb-2">
