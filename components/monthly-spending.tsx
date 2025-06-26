@@ -20,6 +20,7 @@ import {
 
 import { useMemo } from "react";
 import { BudgetItem } from "@/supabase/create-new-budget-function";
+import { useTheme } from "@/components/theme-provider";
 
 export function SpendingLineChart({
   transactions,
@@ -30,6 +31,12 @@ export function SpendingLineChart({
   title?: string;
   description?: string;
 }) {
+  const { isDarkMode } = useTheme();
+
+  const textColor = isDarkMode ? "#E5E7EB" : "#1F2937";
+  const gridColor = isDarkMode ? "#4B5563" : "#D1D5DB";
+  const tooltipBgColor = isDarkMode ? "#374151" : "#F9FAFB";
+
   const chartData = useMemo(() => {
     const dailyTotals: Record<string, number> = {};
 
@@ -60,7 +67,7 @@ export function SpendingLineChart({
   return (
     <Card className="w-full rounded-md border border-muted shadow-sm">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-gray-800">
+        <CardTitle className="text-sm font-medium text-gray-900 dark:text-gray-100">
           {title}
         </CardTitle>
         <CardDescription className="text-xs text-muted-foreground">
@@ -73,22 +80,30 @@ export function SpendingLineChart({
             data={chartData}
             margin={{ top: 10, right: 10, bottom: 0, left: 0 }}
           >
-            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridColor} />
             <XAxis
               dataKey="date"
               tickLine={false}
               axisLine={false}
               fontSize={10}
               tickMargin={6}
+              stroke={textColor}
             />
             <YAxis
               tickLine={false}
               axisLine={false}
               fontSize={10}
               tickMargin={6}
+              stroke={textColor}
             />
             <Tooltip
-              contentStyle={{ borderRadius: 6, fontSize: "0.75rem" }}
+              contentStyle={{
+                borderRadius: 6,
+                fontSize: "0.75rem",
+                backgroundColor: tooltipBgColor,
+                color: textColor,
+                border: "none",
+              }}
               wrapperStyle={{ outline: "none" }}
             />
             <Line

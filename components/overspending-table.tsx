@@ -48,7 +48,7 @@ export function TopOverspendingCard({
   return (
     <Card className="rounded-md border border-muted shadow-sm">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-gray-800">
+        <CardTitle className="text-sm font-medium text-gray-900 dark:text-gray-100">
           Top Overspending
         </CardTitle>
         <CardDescription className="text-xs text-muted-foreground">
@@ -57,20 +57,26 @@ export function TopOverspendingCard({
       </CardHeader>
 
       <CardContent className="space-y-3 px-4 pb-4">
-        {overspending.map((item, index) => (
-          <div
-            key={index}
-            className="flex items-center justify-between text-sm text-gray-700"
-          >
-            <div className="flex items-center gap-1">
-              {item.percent >= 30 && (
-                <Flame className="h-4 w-4 text-red-500" strokeWidth={2} />
-              )}
-              <span>{item.category}</span>
+        {overspending.length === 0 ? (
+          <p className="text-sm text-muted-foreground text-center py-2">
+            No overspending! You&apos;re doing great.
+          </p>
+        ) : (
+          overspending.map((item, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-between text-sm text-foreground"
+            >
+              <div className="flex items-center gap-1">
+                {item.percent >= 30 && (
+                  <Flame className="h-4 w-4 text-red-500 dark:text-red-400" strokeWidth={2} />
+                )}
+                <span>{item.category}</span>
+              </div>
+              <span className="text-red-600 dark:text-red-400 font-semibold">+{item.percent}%</span>
             </div>
-            <span className="text-red-600 font-semibold">+{item.percent}%</span>
-          </div>
-        ))}
+          ))
+        )}
       </CardContent>
     </Card>
   );

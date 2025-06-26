@@ -45,7 +45,7 @@ export default function TransactionPage() {
     <div className="transition-all duration-300 py-10 px-6 md:px-10 w-full md:w-[100vw] lg:w-[85vw] lg:mx-auto">
       <div className="flex flex-col gap-2 mb-6 lg:flex-row lg:items-center lg:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2 lg:mb-0">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 lg:mb-0">
             Transactions
           </h1>
           <div className="flex flex-col gap-2 sm:flex-col md:flex-col lg:hidden">

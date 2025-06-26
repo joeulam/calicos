@@ -8,18 +8,24 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import { useTheme } from "@/components/theme-provider";
 
 export function BudgetGaugeChart({ percent }: { percent: number }) {
+  const { isDarkMode } = useTheme();
+
   const remaining = 100 - percent;
   const gaugeData = [
     { name: "Used", value: percent },
     { name: "Remaining", value: remaining },
   ];
 
+  const usedColor = "#10b981"; 
+  const remainingColor = isDarkMode ? "#4B5563" : "#e5e7eb"; 
+
   return (
     <Card className="w-full max-w-sm rounded-md border border-muted shadow-sm">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-gray-800">
+        <CardTitle className="text-sm font-medium text-gray-900 dark:text-gray-100">
           Budget Usage
         </CardTitle>
         <CardDescription className="text-xs text-muted-foreground">
@@ -40,13 +46,15 @@ export function BudgetGaugeChart({ percent }: { percent: number }) {
             paddingAngle={1}
             dataKey="value"
           >
-            <Cell fill="#10b981" />
-            <Cell fill="#e5e7eb" />
+            <Cell fill={usedColor} />
+            <Cell fill={remainingColor} />
           </Pie>
         </PieChart>
 
         <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 text-center">
-          <p className="text-lg font-semibold text-green-600">{percent}%</p>
+          <p className="text-lg font-semibold text-green-600 dark:text-green-400">
+            {percent}%
+          </p>
           <p className="text-xs text-muted-foreground">Used</p>
         </div>
       </CardContent>

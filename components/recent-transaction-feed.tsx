@@ -17,6 +17,7 @@ export function RecentTransactionsCard({
   transactions: BudgetItem[];
   categoryMap: Record<string, string>;
 }) {
+
   const sorted = [...transactions]
     .sort(
       (a, b) =>
@@ -26,7 +27,7 @@ export function RecentTransactionsCard({
   return (
     <Card className="rounded-md border border-muted shadow-sm">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-gray-800">
+        <CardTitle className="text-sm font-medium text-gray-900 dark:text-gray-100">
           Recent Transactions
         </CardTitle>
         <CardDescription className="text-xs text-muted-foreground">
@@ -47,7 +48,7 @@ export function RecentTransactionsCard({
               className="flex items-center justify-between text-sm"
             >
               <div>
-                <p className="font-medium text-gray-800">
+                <p className="font-medium text-foreground">
                   {tx.vendor || tx.description || "Unnamed"}
                 </p>
                 <p className="text-xs text-muted-foreground">
@@ -60,7 +61,7 @@ export function RecentTransactionsCard({
               </div>
               <div
                 className={`flex items-center gap-1 font-medium ${
-                  isExpense ? "text-red-600" : "text-green-600"
+                  isExpense ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
                 }`}
               >
                 {isExpense ? (

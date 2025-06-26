@@ -127,7 +127,7 @@ export default function BudgetPage() {
 
       <div className="mt-6">
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-sm font-medium text-gray-700">
+          <h2 className="text-sm font-medium text-gray-700 dark:text-gray-300">
             Budget vs Spending
           </h2>
           <AddNewBudget
@@ -137,7 +137,7 @@ export default function BudgetPage() {
             }}
           />
         </div>
-        <div className="rounded-md border bg-white p-3 shadow-sm">
+        <div className="rounded-md border bg-white dark:bg-background p-3 shadow-sm">
           {allData.length > 0 ? (
             <DataTable columns={columns} data={allData} />
           ) : (
@@ -150,7 +150,7 @@ export default function BudgetPage() {
 
       <Card className="mt-6">
         <CardHeader>
-          <CardTitle className="text-sm">Insights</CardTitle>
+          <CardTitle className="text-sm text-gray-900 dark:text-gray-100">Insights</CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground space-y-1">
           {allData.length === 0 ? (
@@ -159,7 +159,7 @@ export default function BudgetPage() {
             <>
               <p>
                 • You&apos;re on track with{" "}
-                <span className="font-medium text-blue-600">
+                <span className="font-medium text-blue-600 dark:text-blue-400">
                   {insights.onTrack}%
                 </span>{" "}
                 of your categories.
@@ -167,7 +167,7 @@ export default function BudgetPage() {
               {insights.nearingLimitCategories.length > 0 && (
                 <p>
                   •{" "}
-                  <span className="text-orange-500 font-medium">
+                  <span className="text-orange-500 dark:text-orange-400 font-medium">
                     {insights.nearingLimitCategories.join(", ")}
                   </span>{" "}
                   {insights.nearingLimitCategories.length === 1 ? "is" : "are"} nearing{" "}
@@ -177,7 +177,7 @@ export default function BudgetPage() {
               {insights.overBudgetCategories.length > 0 && (
                 <p>
                   •{" "}
-                  <span className="text-red-500 font-medium">
+                  <span className="text-red-500 dark:text-red-400 font-medium">
                     {insights.overBudgetCategories.join(", ")}
                   </span>{" "}
                   {insights.overBudgetCategories.length === 1 ? "is" : "are"} over budget!
@@ -186,7 +186,7 @@ export default function BudgetPage() {
               {insights.suggestedReductionCategories.length > 0 && (
                 <p>
                   • Consider reducing spending on{" "}
-                  <span className="text-yellow-600 font-medium">
+                  <span className="text-yellow-600 dark:text-yellow-400 font-medium">
                     {insights.suggestedReductionCategories.join(", ")}
                   </span>
                   .
