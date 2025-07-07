@@ -75,7 +75,6 @@ export default async function Layout({
     <html lang="en" suppressHydrationWarning>
       <head />
       <body>
-        {/* This script applies the theme class to HTML before React hydration to prevent FOUC */}
         <script
           id="fouc-fix"
           dangerouslySetInnerHTML={{

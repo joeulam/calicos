@@ -1,4 +1,3 @@
-// page.tsx (SettingsPage)
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -14,17 +13,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { createClient } from "@/utils/supabase/client";
@@ -33,7 +21,6 @@ import { useTheme } from "@/components/theme-provider";
 export default function SettingsPage() {
   const supabase = createClient();
   const { isDarkMode, toggleDarkMode } = useTheme();
-
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
@@ -42,7 +29,7 @@ export default function SettingsPage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [mounted, setMounted] = useState(false); // New state for client-side mount
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     async function fetchUserData() {
@@ -83,7 +70,7 @@ export default function SettingsPage() {
     }
 
     fetchUserData();
-    setMounted(true); // Set mounted to true after initial client render
+    setMounted(true);
   }, []);
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
@@ -119,8 +106,7 @@ export default function SettingsPage() {
         {
           id: user.id,
           notifications_enabled: notificationsEnabled ?? true,
-          dark_mode_enabled: isDarkMode ?? false, // Use isDarkMode from context
-          currency_preference: currencyPreference || "USD",
+          dark_mode_enabled: isDarkMode ?? false,
         },
         { onConflict: "id" }
       );
@@ -174,19 +160,7 @@ export default function SettingsPage() {
     setLoading(false);
   };
 
-  const confirmDeleteAccount = async () => {
-    setLoading(true);
-
-    const { error } = await supabase.rpc("delete_user_data");
-
-    if (error) {
-      toast.error(`Failed to delete account: ${error.message}`);
-      console.error("Error deleting account:", error);
-    } else {
-      toast.success("Account Deleted Successfully!");
-    }
-    setLoading(false);
-  };
+  
 
   return (
     <div
@@ -199,8 +173,8 @@ export default function SettingsPage() {
 
       <Card className="mt-5">
         <CardHeader>
-          <CardTitle>Profile Information</CardTitle>
-          <CardDescription>Update your personal details.</CardDescription>
+          <CardTitle className="text-foreground">Profile Information</CardTitle>
+          <CardDescription className="text-muted-foreground">Update your personal details.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleUpdateProfile} className="space-y-4">
@@ -236,8 +210,8 @@ export default function SettingsPage() {
 
       <Card className="mt-5">
         <CardHeader>
-          <CardTitle>Appearance</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-foreground">Appearance</CardTitle>
+          <CardDescription className="text-muted-foreground">
             Customize the look and feel of the application.
           </CardDescription>
         </CardHeader>
@@ -266,8 +240,8 @@ export default function SettingsPage() {
 
       <Card className="mt-5">
         <CardHeader>
-          <CardTitle>Password & Security</CardTitle>
-          <CardDescription>Change your password.</CardDescription>
+          <CardTitle className="text-foreground">Password & Security</CardTitle>
+          <CardDescription className="text-muted-foreground">Change your password.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleChangePassword} className="space-y-4">
@@ -295,7 +269,7 @@ export default function SettingsPage() {
                 disabled={loading}
               />
               {passwordError && (
-                <p className="text-red-500 text-sm mt-1">{passwordError}</p>
+                <p className="text-red-500 dark:text-red-400 text-sm mt-1">{passwordError}</p>
               )}
             </div>
             <Button type="submit" disabled={loading}>
@@ -307,8 +281,8 @@ export default function SettingsPage() {
 
       <Card className="mt-5">
         <CardHeader>
-          <CardTitle>Preferences</CardTitle>
-          <CardDescription>Set your application preferences.</CardDescription>
+          <CardTitle className="text-foreground">Preferences</CardTitle>
+          <CardDescription className="text-muted-foreground">Set your application preferences.</CardDescription>
         </CardHeader>
         <CardContent>
           <div>
@@ -322,7 +296,7 @@ export default function SettingsPage() {
                   preventDefault: () => {},
                 } as React.FormEvent);
               }}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500"
+              className="mt-1 block w-full border border-gray-300 dark:border-gray-700 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 bg-background text-foreground"
               disabled={loading}
             >
               <option value="USD">USD ($)</option>
@@ -333,44 +307,7 @@ export default function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Card className="border-red-400 mt-5">
-        <CardHeader>
-          <CardTitle className="text-red-600">Danger Zone</CardTitle>
-          <CardDescription>Irreversible actions.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive" disabled={loading}>
-                Delete Account
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  your account and remove your data from our servers.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={confirmDeleteAccount}
-                  className="bg-red-600 hover:bg-red-700"
-                  disabled={loading}
-                >
-                  Continue
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-
-          <p className="text-xs mt-2 text-red-500">
-            Deleting your account will permanently remove all your data.
-          </p>
-        </CardContent>
-      </Card>
+      
     </div>
   );
 }
