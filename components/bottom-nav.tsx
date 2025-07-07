@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Home, Inbox, Calendar, Search, Settings, Sun, Moon } from "lucide-react";
 import clsx from "clsx";
 import { useTheme } from "@/components/theme-provider";
+import { useState, useEffect } from "react";
 
 const navItems = [
   { title: "Dashboard", href: "/dashboard", icon: Home },
@@ -17,6 +18,12 @@ const navItems = [
 export default function BottomNavBar({ userId }: { userId: string }) {
   const pathname = usePathname();
   const { isDarkMode, toggleDarkMode } = useTheme();
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleThemeToggle = () => {
     toggleDarkMode(!isDarkMode);
@@ -46,10 +53,14 @@ export default function BottomNavBar({ userId }: { userId: string }) {
         onClick={handleThemeToggle}
         className="flex flex-col items-center text-xs text-gray-500 dark:text-gray-400"
       >
-        {isDarkMode ? (
-          <Sun className="w-5 h-5 mb-1 text-yellow-500" />
+        {mounted ? (
+          isDarkMode ? (
+            <Sun className="w-5 h-5 mb-1 text-yellow-500" />
+          ) : (
+            <Moon className="w-5 h-5 mb-1 text-indigo-700" />
+          )
         ) : (
-          <Moon className="w-5 h-5 mb-1 text-indigo-700" />
+          <div className="w-5 h-5 mb-1" />
         )}
         Theme
       </button>

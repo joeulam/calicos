@@ -87,7 +87,7 @@ export default function TransactionPage() {
     transactions,
     searchText,
     filterType,
-    filterCategory, // Add filterCategory to dependencies
+    filterCategory, 
     availableCategories,
   ]);
 
@@ -181,11 +181,15 @@ export default function TransactionPage() {
         </div>
 
         <TabsContent className="md:w-[90vw] lg:w-[73vw]" value="all">
-          <DataTable columns={tableColumns} data={filteredTransactions} />
+          <div className="overflow-x-auto">
+            <DataTable columns={tableColumns} data={filteredTransactions} />
+          </div>
         </TabsContent>
 
         <TabsContent className="md:w-[90vw] lg:w-[73vw]" value="currentMonth">
-          <DataTable columns={tableColumns} data={currentMonthTransactions} />
+          <div className="overflow-x-auto">
+            <DataTable columns={tableColumns} data={currentMonthTransactions} />
+          </div>
         </TabsContent>
       </Tabs>
 
