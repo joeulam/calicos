@@ -11,10 +11,10 @@ export default function LandingPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 text-gray-800 font-sans antialiased">
       <header className="absolute top-0 left-0 right-0 p-6 flex justify-end z-10">
         <nav className="space-x-4">
-          <Button variant="ghost" onClick={() => router.push("/login")}>
+          <Button className="cursor-pointer" variant="ghost" onClick={() => router.push("/login")}>
             Login
           </Button>
-          <Button onClick={() => router.push("/signup")}>Sign up</Button>
+          <Button className="cursor-pointer" onClick={() => router.push("/signup")}>Sign up</Button>
         </nav>
       </header>
 
@@ -36,14 +36,14 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4 pt-4">
             <Button
               size="lg"
-              className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg transform transition-transform duration-200 hover:scale-105"
+              className=" cursor-pointer bg-blue-600 hover:bg-blue-700 text-white shadow-lg transform transition-transform duration-200 hover:scale-105"
               onClick={() => router.push("/signup")}
             >
               Get Started for Free
             </Button>
             <Button
               size="lg"
-              className="bg-white hover:bg-gray-50 text-black shadow-lg transform transition-transform duration-200 hover:scale-105"
+              className="cursor-pointer bg-white hover:bg-gray-50 text-black shadow-lg transform transition-transform duration-200 hover:scale-105"
               onClick={() =>
                 document
                   .getElementById("features")
@@ -165,7 +165,7 @@ export default function LandingPage() {
           </p>
           <Button
             size="lg"
-            className="bg-white text-blue-600 hover:bg-gray-100 shadow-xl transform transition-transform duration-200 hover:scale-105"
+            className="cursor-pointer bg-white text-blue-600 hover:bg-gray-100 shadow-xl transform transition-transform duration-200 hover:scale-105"
             onClick={() => router.push("/signup")}
           >
             Start Your Calico Journey Today
@@ -176,14 +176,6 @@ export default function LandingPage() {
       <footer className="bg-gray-800 text-gray-300 py-8 px-6 md:px-10 text-center text-sm">
         <div className="max-w-6xl mx-auto">
           <p>&copy; {new Date().getFullYear()} Calico. All rights reserved.</p>
-          <div className="mt-2 space-x-4">
-            <a href="#" className="hover:text-white transition-colors">
-              Privacy Policy
-            </a>
-            <a href="#" className="hover:text-white transition-colors">
-              Terms of Service
-            </a>
-          </div>
         </div>
       </footer>
     </div>

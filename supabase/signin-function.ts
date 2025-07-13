@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/client";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { toast } from "sonner";
 
 export async function signin(
   email: string,
@@ -17,5 +18,8 @@ export async function signin(
   } else {
     console.log("User Login:", data.user);
     router.push(`/${data.user?.id}/dashboard`);
+    return (
+      toast("Successfully Logged In")
+    )
   }
 }
