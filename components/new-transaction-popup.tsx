@@ -147,7 +147,7 @@ export default function AddTransactionModal({
     <Dialog>
       <Toaster />
       <DialogTrigger>
-        <Button className="w-[90vw] lg:w-15/16">Add new transaction</Button>
+        {/* <Button className="w-[90vw] lg:w-15/16">Add new transaction</Button> */}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader className="text-xl font-bold">New Transaction</DialogHeader>

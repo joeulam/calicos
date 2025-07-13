@@ -100,6 +100,8 @@ export default function BudgetPage() {
 
   return (
     <div className="transition-all duration-300 py-10 px-6 md:px-10 w-full md:w-[100vw] lg:w-[85vw] lg:mx-auto">
+      <meta name="viewport" content="width=device-width, initial-scale=.7" />
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <BudgetTitle monthDisplay={monthDisplay} />
         <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
@@ -137,7 +139,7 @@ export default function BudgetPage() {
             }}
           />
         </div>
-        <div className="rounded-md border bg-white dark:bg-background p-3 shadow-sm">
+        <div className="rounded-md border bg-white dark:bg-background p-3 shadow-sm overflow-x-auto"> 
           {allData.length > 0 ? (
             <DataTable columns={columns} data={allData} />
           ) : (
@@ -181,15 +183,6 @@ export default function BudgetPage() {
                     {insights.overBudgetCategories.join(", ")}
                   </span>{" "}
                   {insights.overBudgetCategories.length === 1 ? "is" : "are"} over budget!
-                </p>
-              )}
-              {insights.suggestedReductionCategories.length > 0 && (
-                <p>
-                  • Consider reducing spending on{" "}
-                  <span className="text-yellow-600 dark:text-yellow-400 font-medium">
-                    {insights.suggestedReductionCategories.join(", ")}
-                  </span>
-                  .
                 </p>
               )}
               {insights.nearingLimitCategories.length === 0 &&

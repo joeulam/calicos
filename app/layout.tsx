@@ -17,6 +17,7 @@ export const metadata: Metadata = {
   title: "Calico",
   description: "AI-powered financial app",
 };
+import Head from "next/head";
 
 export default function RootLayout({
   children,
@@ -25,6 +26,33 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script
+          id="fouc-fix"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  const theme = localStorage.getItem('theme');
+                  const root = document.documentElement;
+                  const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+                  if (theme === 'dark' || (theme === null && isSystemDark)) {
+                    root.classList.add('dark');
+                    root.style.setProperty('color-scheme', 'dark');
+                  } else {
+                    root.classList.remove('dark');
+                    root.style.setProperty('color-scheme', 'light');
+                  }
+                } catch (e) {
+                  console.error("Theme script error:", e);
+                }
+              })();
+            `,
+          }}
+        />
+      </Head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -35,5 +63,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-
