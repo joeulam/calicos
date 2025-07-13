@@ -111,6 +111,8 @@ export default function TransactionPage() {
 
   return (
     <div className="transition-all duration-300 py-10 px-6 md:px-10 w-full md:w-[100vw] lg:w-[85vw] lg:mx-auto">
+      <meta name="viewport" content="width=device-width, initial-scale=.7" />
+
       <div className="flex flex-col gap-2 mb-6 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 lg:mb-0">

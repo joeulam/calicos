@@ -125,9 +125,9 @@ export default function UploadReceiptModal({
   return (
     <Dialog>
       <DialogTrigger>
-        <Button className="w-[90vw] lg:w-15/16" variant={`outline`}>
+        {/* <Button className="w-[90vw] lg:w-15/16" variant={`outline`}>
           Upload Receipt
-        </Button>
+        </Button> */}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader className="text-xl font-bold">

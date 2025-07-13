@@ -166,6 +166,8 @@ export default function SettingsPage() {
     <div
       className={`transition-all duration-300 py-10 px-6 md:px-10 w-[100vw] md:w-[80vw]`}
     >
+            <meta name="viewport" content="width=device-width, initial-scale=.7" />
+
       <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
         Settings
       </h1>

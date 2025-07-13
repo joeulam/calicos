@@ -73,10 +73,12 @@ export default async function ProtectedLayout({
           <div className="hidden lg:block">
             <AppSidebar items={items} />
           </div>
+
           <main className="flex-1 overflow-x-hidden pb-16 lg:pb-0">
             {children}
+            <BottomNavBar userId={id} />
           </main>
-          <BottomNavBar userId={id} />
+          
         </div>
       </SidebarProvider>
     </ThemeProvider>

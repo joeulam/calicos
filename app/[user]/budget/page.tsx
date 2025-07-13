@@ -100,6 +100,8 @@ export default function BudgetPage() {
 
   return (
     <div className="transition-all duration-300 py-10 px-6 md:px-10 w-full md:w-[100vw] lg:w-[85vw] lg:mx-auto">
+      <meta name="viewport" content="width=device-width, initial-scale=.7" />
+
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
         <BudgetTitle monthDisplay={monthDisplay} />
         <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
