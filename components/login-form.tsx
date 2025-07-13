@@ -51,17 +51,14 @@ export function LoginForm({
                 <Input onChange={(e) => setPassword(e.target.value)} id="password" type="password" required />
               </div>
               <div className="flex flex-col gap-3">
-                <Button onClick={() => signin(email,password,router)} type="button" className="w-full">
+                <Button onClick={() => signin(email,password,router)} type="button" className="w-full cursor-pointer">
                   Login
-                </Button>
-                <Button variant="outline" className="w-full">
-                  Login with Google
                 </Button>
               </div>
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <a href="/signup" className="underline underline-offset-4">
+              <a href="/signup" className="underline underline-offset-4 cursor-pointer">
                 Sign up
               </a>
             </div>

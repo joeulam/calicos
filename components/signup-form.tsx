@@ -58,18 +58,16 @@ export function SignupForm({
                 <Button
                   onClick={() => signupNewUser(email, password, router)}
                   type="button"
-                  className="w-full"
+                  className="w-full cursor-pointer"
                 >
                   Sign up
                 </Button>
-                <Button variant="outline" className="w-full">
-                  Sign up with Google
-                </Button>
+                
               </div>
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <a href="/login" className="underline underline-offset-4">
+              <a href="/login" className="underline underline-offset-4 cursor-pointer">
                 Login
               </a>
             </div>

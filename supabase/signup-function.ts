@@ -1,5 +1,6 @@
 import { createClient } from "@/utils/supabase/client";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { toast } from "sonner";
 
 export async function signupNewUser(
   email: string,
@@ -21,5 +22,8 @@ export async function signupNewUser(
   } else {
     console.log("User signed up:", data.user);
     router.push(`/${data.user?.id}/dashboard`);
+    return (
+      toast("Account Created")
+    )
   }
 }
