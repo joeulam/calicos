@@ -1,47 +1,62 @@
 import { createClient } from "@/utils/supabase/client";
 
-export async function getTopSpendingCategories() {
+export type CategorySpending = {
+  name: string;
+  amount: number;
+};
+
+type SpendingResult = {
+  categories: CategorySpending[];
+  total: number;
+};
+
+type TransactionRow = {
+  total: number;
+  category_id: string;
+  categories?: { name: string };
+};
+
+export async function getTopSpendingCategories(
+  month: number,
+  year: number
+): Promise<SpendingResult> {
+  const start = `${year}-${month.toString().padStart(2, "0")}-01`;
+  const endDate = new Date(year, month, 1);
+  const end = `${endDate.getFullYear()}-${(endDate.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-01`;
+
   const supabase = createClient();
 
   const { data, error } = await supabase
-    .from("transaction_categories")
-    .select(`
-      category_id,
-      transactions(total, type),
-      categories(id, name, emoji)
-    `)
-    .returns<
-      {
-        category_id: string;
-        transactions: { total: number; type: string };
-        categories: { id: string; name: string; emoji: string };
-      }[]
-    >();
+    .from("transactions")
+    .select(
+      "total, category_id, categories!transactions_category_id_fkey(name)"
+    )
+    .gte("date", start)
+    .lt("date", end)
+    .returns<TransactionRow[]>();
 
-  if (error || !data) {
-    console.error("Failed to fetch transactions with categories", error);
-    return [];
+  if (error) {
+    console.error("Error fetching category spending:", { error, start, end });
+    return { categories: [], total: 0 };
   }
 
-  const categoryTotals: Record<string, { label: string; amount: number }> = {};
+  const grouped: Record<string, number> = {};
+  let total = 0;
 
-  for (const row of data) {
-    if (row.transactions?.type !== "expense") continue;
+  for (const row of data ?? []) {
+    const name = row.categories?.name || "Uncategorized";
+    const amount = Number(row.total) || 0;
 
-    const total = row.transactions.total ?? 0;
-    const catId = row.category_id;
-    const name = row.categories?.name ?? "Uncategorized";
-    const emoji = row.categories?.emoji ?? "";
-    const label = `${name} ${emoji}`.trim();
-
-    if (!categoryTotals[catId]) {
-      categoryTotals[catId] = { label, amount: 0 };
-    }
-
-    categoryTotals[catId].amount += total;
+    grouped[name] = Number(((grouped[name] || 0) + amount).toFixed(2));
+    
+    total += amount;
   }
 
-  return Object.values(categoryTotals)
+  const sorted = Object.entries(grouped)
+    .map(([name, amount]) => ({ name, amount }))
     .sort((a, b) => b.amount - a.amount)
     .slice(0, 10);
+    return { categories: sorted, total };
 }
