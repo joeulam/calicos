@@ -28,7 +28,8 @@ export default function BudgetPage() {
   const [allData, setAllData] = useState<BudgetData[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [mounted, setMounted] = useState(false);
-
+  const currentMonthNumber = currentMonth.getMonth() + 1;
+  const currentYear = currentMonth.getFullYear();
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -53,7 +54,8 @@ export default function BudgetPage() {
         item.budget > 0 ? (item.spent / item.budget) * 100 : 0;
 
       if (actualProgress < 80) onTrackCount++;
-      if (actualProgress >= 80 && actualProgress < 100) nearingLimit.push(item.category);
+      if (actualProgress >= 80 && actualProgress < 100)
+        nearingLimit.push(item.category);
       if (actualProgress >= 100) overBudget.push(item.category);
       if (item.spent > 100 && !["rent", "groceries"].includes(item.category)) {
         highSpending.push(item.category);
@@ -123,7 +125,7 @@ export default function BudgetPage() {
           transition={{ duration: 0.4 }}
           className="mt-5"
         >
-          <BudgetCategoryBarChart />
+          <BudgetCategoryBarChart month={currentMonthNumber} year={currentYear} />
         </motion.div>
       )}
 
@@ -139,7 +141,7 @@ export default function BudgetPage() {
             }}
           />
         </div>
-        <div className="rounded-md border bg-white dark:bg-background p-3 shadow-sm overflow-x-auto"> 
+        <div className="rounded-md border bg-white dark:bg-background p-3 shadow-sm overflow-x-auto">
           {allData.length > 0 ? (
             <DataTable columns={columns} data={allData} />
           ) : (
@@ -152,7 +154,9 @@ export default function BudgetPage() {
 
       <Card className="mt-6">
         <CardHeader>
-          <CardTitle className="text-sm text-gray-900 dark:text-gray-100">Insights</CardTitle>
+          <CardTitle className="text-sm text-gray-900 dark:text-gray-100">
+            Insights
+          </CardTitle>
         </CardHeader>
         <CardContent className="text-sm text-muted-foreground space-y-1">
           {allData.length === 0 ? (
@@ -172,8 +176,12 @@ export default function BudgetPage() {
                   <span className="text-orange-500 dark:text-orange-400 font-medium">
                     {insights.nearingLimitCategories.join(", ")}
                   </span>{" "}
-                  {insights.nearingLimitCategories.length === 1 ? "is" : "are"} nearing{" "}
-                  {insights.nearingLimitCategories.length === 1 ? "its" : "their"} limit.
+                  {insights.nearingLimitCategories.length === 1 ? "is" : "are"}{" "}
+                  nearing{" "}
+                  {insights.nearingLimitCategories.length === 1
+                    ? "its"
+                    : "their"}{" "}
+                  limit.
                 </p>
               )}
               {insights.overBudgetCategories.length > 0 && (
@@ -182,7 +190,8 @@ export default function BudgetPage() {
                   <span className="text-red-500 dark:text-red-400 font-medium">
                     {insights.overBudgetCategories.join(", ")}
                   </span>{" "}
-                  {insights.overBudgetCategories.length === 1 ? "is" : "are"} over budget!
+                  {insights.overBudgetCategories.length === 1 ? "is" : "are"}{" "}
+                  over budget!
                 </p>
               )}
               {insights.nearingLimitCategories.length === 0 &&
